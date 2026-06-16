@@ -1,3 +1,0 @@
-# kaidk.github.io
-
-Just a placeholder...
