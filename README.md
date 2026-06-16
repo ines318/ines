@@ -1,1 +1,3 @@
-# kaidk-github-website
+# kaidk.github.io
+
+Just a placeholder...
