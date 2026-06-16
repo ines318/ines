@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanban-Simulator</title>
+<link rel = "stylesheet" href = "style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     VIEW 1: START
+══════════════════════════════════════════════════════ -->
+<div id="view-start" class="view active">
+  <div class="app-header">
+    <h1>Kanban-Simulator</h1>
+  </div>
+  <div class="content">
+    <div class="card">
+      <h2>Willkommen zum Kanban-Simulator</h2>
+      <p>Dieser Simulator macht die Wirkung von Kanban-Praktiken erfahrbar. Erleben Sie den Unterschied zwischen konventionellem Arbeiten und Kanban – messbar und sichtbar am Board.</p>
+
+      <div class="mode-grid">
+        <div class="mode-card recommended" id="btn-standard-mode">
+          <div class="badge">Empfohlen</div>
+          <h3>Standardpfad</h3>
+          <p>Zwei geführte Runden: Erst arbeiten Sie ohne Kanban, dann mit WIP-Limits. Reflexionsphasen erklären die Unterschiede anhand Ihrer eigenen Ergebnisse.</p>
+          <p style="margin-top:8px;font-size:.82rem;color:#6366f1;font-weight:600">→ Runde 1 (Push) → Reflexion → Runde 2 (Kanban) → Vergleich</p>
+        </div>
+        <div class="mode-card" id="btn-free-mode">
+          <div class="badge" style="background:#dbeafe;color:#1e40af">Für Wiederholer</div>
+          <h3>Freies Experimentieren</h3>
+          <p>Direkteinstieg mit freier Konfiguration. Stellen Sie WIP-Limits selbst ein und beobachten Sie die Auswirkungen auf das System.</p>
+          <p style="margin-top:8px;font-size:.82rem;color:#3b82f6;font-weight:600">→ Konfigurieren → Simulieren → Vergleichen</p>
+        </div>
+      </div>
+
+      <div class="collapsible" style="border:none">
+        <div class="collapsible-header" id="toggle-overview" style="display:none">
+          <span>Kanban-Überblick: Praktiken &amp; Kennzahlen</span>
+          <span id="toggle-icon">▼</span>
+        </div>
+        <div class="collapsible-body open" id="overview-body">
+          <strong>Die 6 Kanban-Praktiken</strong>
+          <ul style="margin-top:6px">
+            <li><strong>P1 Visualisierung:</strong> Arbeit und Prozess sichtbar machen.</li>
+            <li><strong>P2 WIP begrenzen:</strong> Parallele Arbeit limitieren, um Fluss zu erzeugen.</li>
+            <li><strong>P3 Fluss managen:</strong> Blockierungen erkennen und beseitigen.</li>
+            <li><strong>P4 Prozessregeln explizit machen:</strong> Klare Vereinbarungen treffen.</li>
+            <li><strong>P5 Feedback-Schleifen:</strong> Regelmäßig reflektieren und lernen.</li>
+            <li><strong>P6 Gemeinsam verbessern:</strong> Kontinuierlich auf Basis von Daten optimieren.</li>
+          </ul>
+          <strong style="display:block;margin-top:12px">Die 4 Kernkennzahlen</strong>
+          <ul style="margin-top:6px">
+            <li><strong>WIP (Work in Progress):</strong> Anzahl aktuell begonnener, noch nicht abgeschlossener Aufgaben.</li>
+            <li><strong>Durchlaufzeit:</strong> Zeit vom Eintritt einer Aufgabe ins System bis zur Fertigstellung.</li>
+            <li><strong>Durchsatz:</strong> Anzahl fertiggestellter Aufgaben pro Zeiteinheit.</li>
+            <li><strong>CFD (Kumulativer Flussdiagramm):</strong> Zeigt die Verteilung aller Aufgaben auf die Prozessschritte über die Zeit.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     VIEW 2: INTRODUCTION (Standardpfad)
+══════════════════════════════════════════════════════ -->
+<div id="view-intro" class="view">
+  <div class="app-header">
+    <h1>Kanban-Simulator</h1>
+    <div class="phase-badge">Einführung</div>
+    <div class="progress-steps">
+      <div class="step active"></div><div class="step"></div><div class="step"></div><div class="step"></div><div class="step"></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <h2>Runde 1: Konventionelles Arbeiten</h2>
+      <p>Sie steuern ein Software-Entwicklungsteam durch einen Entwicklungszyklus. Das Team bearbeitet Aufgaben in mehreren Schritten: von der Ideensammlung über Bewertung, Planung und Umsetzung bis hin zum Testen.</p>
+
+      <div class="intro-box">
+        <h3>Ihre Aufgabe</h3>
+        <p>Beobachten Sie, wie sich Aufgaben durch das System bewegen. Achten Sie auf:</p>
+        <ul style="margin-top:8px;padding-left:18px;color:#78350f;font-size:.9rem">
+          <li>Wo sammeln sich Aufgaben an?</li>
+          <li>Wie viele Aufgaben werden tatsächlich abgeschlossen?</li>
+          <li>Welche Prozessschritte wirken wie Engpässe?</li>
+        </ul>
+      </div>
+
+      <p>Das Team arbeitet nach bewährten Methoden: Jede Abteilung schiebt ihre fertigen Aufgaben sofort in den nächsten Schritt weiter (<strong>Push-Prinzip</strong>). Es gibt keine Obergrenzen für parallele Arbeit.</p>
+
+      <div class="duration-select">
+        <label for="r1-duration">Rundendauer (simulierte Arbeitstage):</label>
+        <select id="r1-duration">
+          <option value="10">10 Tage</option>
+          <option value="15" selected>15 Tage</option>
+          <option value="20">20 Tage</option>
+        </select>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-start-r1">Runde 1 starten →</button>
+        <button class="btn btn-secondary" id="btn-back-to-start">← Zurück</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     VIEW 3: SIMULATION BOARD
+══════════════════════════════════════════════════════ -->
+<div id="view-sim" class="view view-fixed">
+  <div class="app-header" style="padding:8px 16px">
+    <h1>Kanban-Simulator</h1>
+    <div class="phase-badge" id="sim-phase-badge">Runde 1</div>
+    <div class="progress-steps" id="sim-progress" style="margin-left:8px">
+      <div class="step done"></div><div class="step active"></div><div class="step"></div><div class="step"></div><div class="step"></div>
+    </div>
+  </div>
+
+  <div class="sim-controls">
+    <div class="ctrl-group">
+      <span class="day-display" id="day-display">Tag 1 / 15</span>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">Geschwindigkeit:</span>
+      <button class="speed-btn" data-speed="slow">0,5×</button>
+      <button class="speed-btn active" data-speed="normal">1,0×</button>
+      <button class="speed-btn" data-speed="fast">1,5×</button>
+    </div>
+    <div class="ctrl-group">
+      <button class="btn btn-success btn-sm" id="btn-start-sim" style="font-size:.9rem;padding:7px 20px">▶ Simulation starten</button>
+      <button class="btn btn-secondary btn-sm" id="btn-pause" style="display:none">⏸ Pause</button>
+      <button class="btn btn-primary btn-sm" id="btn-to-results" style="display:none;font-size:.9rem;padding:7px 20px">Zur Auswertung →</button>
+    </div>
+    <div class="ctrl-group" style="margin-left:auto">
+      <div class="counter-pill"><span class="label">WIP:</span><span class="value" id="counter-wip">0</span></div>
+      <div class="counter-pill"><span class="label">Fertig:</span><span class="value" id="counter-done">0</span></div>
+    </div>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board" id="board">
+      <!-- Ideen Speicher -->
+      <div class="board-col col-ideen">
+        <div class="col-head">
+          <span class="col-name">Ideen</span>
+          <span class="wip-badge wip-ok" id="wip-ideen">18</span>
+        </div>
+        <div class="col-section" style="padding:6px">
+          <div class="items-list" id="col-ideen-items"></div>
+        </div>
+      </div>
+
+      <!-- Evaluierung -->
+      <div class="board-col col-eval">
+        <div class="col-head">
+          <span class="col-name">Evaluierung</span>
+          <span class="wip-badge wip-ok" id="wip-eval">0/∞</span>
+        </div>
+        <div class="col-section active-section">
+          <div class="section-label">Aktiv</div>
+          <div class="items-list" id="col-eval-active"></div>
+        </div>
+      </div>
+
+      <!-- Wartezone: Eval → Plan -->
+      <div class="wait-zone" id="wz-eval"><span class="wait-zone-label">Warten</span></div>
+
+      <!-- Planning -->
+      <div class="board-col col-plan">
+        <div class="col-head">
+          <span class="col-name">Planning</span>
+          <span class="wip-badge wip-ok" id="wip-plan">0/∞</span>
+        </div>
+        <div class="col-section active-section">
+          <div class="section-label">Aktiv</div>
+          <div class="items-list" id="col-plan-active"></div>
+        </div>
+      </div>
+
+      <!-- Wartezone: Plan → Impl -->
+      <div class="wait-zone" id="wz-plan"><span class="wait-zone-label">Warten</span></div>
+
+      <!-- Umsetzung -->
+      <div class="board-col col-impl">
+        <div class="col-head">
+          <span class="col-name">Umsetzung</span>
+          <span class="wip-badge wip-ok" id="wip-impl">0/∞</span>
+        </div>
+        <div class="col-section active-section">
+          <div class="section-label">Aktiv</div>
+          <div class="items-list" id="col-impl-active"></div>
+        </div>
+      </div>
+
+      <!-- Wartezone: Impl → Test -->
+      <div class="wait-zone" id="wz-impl"><span class="wait-zone-label">Warten</span></div>
+
+      <!-- Testing -->
+      <div class="board-col col-test">
+        <div class="col-head">
+          <span class="col-name">Testing</span>
+          <span class="wip-badge wip-ok" id="wip-test">0/∞</span>
+        </div>
+        <div class="col-section active-section">
+          <div class="section-label">Aktiv</div>
+          <div class="items-list" id="col-test-active"></div>
+        </div>
+      </div>
+
+      <!-- Fertig -->
+      <div class="board-col col-fertig">
+        <div class="col-head">
+          <span class="col-name">Fertig</span>
+          <span class="wip-badge wip-ok" id="wip-fertig">0</span>
+        </div>
+        <div class="col-section" style="padding:6px">
+          <div class="items-list" id="col-fertig-items"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     VIEW 4: REFLECTION (after Round 1)
+══════════════════════════════════════════════════════ -->
+<div id="view-reflect" class="view">
+  <div class="app-header">
+    <h1>Kanban-Simulator</h1>
+    <div class="phase-badge">Reflexion nach Runde 1</div>
+    <div class="progress-steps">
+      <div class="step done"></div><div class="step done"></div><div class="step active"></div><div class="step"></div><div class="step"></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <h2>Ergebnisse: Runde 1 – Konventionelles Arbeiten</h2>
+      <span class="tag tag-push">Push-Logik · kein WIP-Limit</span>
+
+      <div class="metrics-grid" id="r1-metrics"></div>
+
+      <div class="cfd-wrap">
+        <h3>Kumulatives Flussdiagramm (CFD)</h3>
+        <canvas id="cfd-r1" height="200"></canvas>
+        <div class="cfd-legend" id="cfd-legend-r1"></div>
+      </div>
+
+      <div class="cause-effect" id="r1-cause-effect"></div>
+
+      <hr class="divider">
+      <h3>Was kommt in Runde 2?</h3>
+      <p>In Runde 2 arbeiten Sie mit demselben Aufgabenpool – aber unter anderen Bedingungen: Das System erhält <strong>WIP-Limits</strong> pro Prozessschritt und wechselt von Push auf <strong>Pull-Logik</strong>. Aufgaben werden erst dann in einen nächsten Schritt gezogen, wenn dort Kapazität frei ist.</p>
+      <p>Die WIP-Limits sind systemseitig vorgegeben und können nicht verändert werden.</p>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-start-r2">Runde 2 starten →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     VIEW 5: COMPARISON (after Round 2)
+══════════════════════════════════════════════════════ -->
+<div id="view-compare" class="view">
+  <div class="app-header">
+    <h1>Kanban-Simulator</h1>
+    <div class="phase-badge">Vergleich R1 vs R2</div>
+    <div class="progress-steps">
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step active"></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <h2>Vergleich: Runde 1 vs. Runde 2</h2>
+
+      <div class="compare-grid">
+        <div class="compare-col r1">
+          <h3>Runde 1 – Push (kein WIP-Limit)</h3>
+          <div id="compare-r1-metrics"></div>
+        </div>
+        <div class="compare-col r2">
+          <h3>Runde 2 – Pull (mit WIP-Limits)</h3>
+          <div id="compare-r2-metrics"></div>
+        </div>
+      </div>
+
+      <div class="cfd-wrap">
+        <h3>Kumulatives Flussdiagramm – Runde 1</h3>
+        <canvas id="cfd-compare-r1" height="160"></canvas>
+      </div>
+      <div class="cfd-wrap">
+        <h3>Kumulatives Flussdiagramm – Runde 2</h3>
+        <canvas id="cfd-compare-r2" height="160"></canvas>
+      </div>
+      <div class="cfd-legend" id="cfd-legend-compare"></div>
+
+      <div class="cause-effect" id="compare-cause-effect"></div>
+
+      <div class="questions">
+        <h3 style="margin-bottom:10px">Reflexionsfragen</h3>
+        <ul style="padding-left:18px">
+          <li>Was hat sich am Board sichtbar verändert?</li>
+          <li>Warum sank die Durchlaufzeit trotz desselben Engpasses?</li>
+          <li>Warum wurden bei ähnlicher Auslastung mehr Aufgaben abgeschlossen?</li>
+          <li>Was würden Sie in einem realen Team noch verändern?</li>
+        </ul>
+      </div>
+
+      <hr class="divider">
+      <h3>Wie möchten Sie fortfahren?</h3>
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-go-free">Frei experimentieren →</button>
+        <button class="btn btn-secondary" id="btn-go-closing-from-compare">Abschließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     VIEW 6: CONFIGURATION
+══════════════════════════════════════════════════════ -->
+<div id="view-config" class="view">
+  <div class="app-header">
+    <h1>Kanban-Simulator</h1>
+    <div class="phase-badge">Konfiguration</div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <h2>Freies Experimentieren – Konfiguration</h2>
+      <p>Stellen Sie die WIP-Limits pro Prozessschritt ein. Setzen Sie ein Häkchen bei „Kein Limit", um Push-Logik für diese Spalte zu aktivieren. Wenn alle Spalten kein Limit haben, gilt vollständige Push-Logik.</p>
+
+      <div id="config-ref-data"></div>
+
+      <div class="config-grid" id="config-wip-grid"></div>
+
+      <hr class="divider">
+      <h3>Optionale Mechaniken</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+        <div class="config-toggle">
+          <input type="checkbox" id="cfg-blockers">
+          <div>
+            <label for="cfg-blockers">Blockierungen aktivieren</label>
+            <p>Aufgaben können zufällig blockiert werden und kein Fortschritt macht für einige Tage.</p>
+          </div>
+        </div>
+        <div class="config-toggle">
+          <input type="checkbox" id="cfg-rework">
+          <div>
+            <label for="cfg-rework">Rückläufer aktivieren</label>
+            <p>Nach dem Testing können Aufgaben zufällig zurück zur Umsetzung geschickt werden (max. 2× pro Aufgabe).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="duration-select" style="margin-top:16px">
+        <label for="free-duration">Rundendauer:</label>
+        <select id="free-duration">
+          <option value="10">10 Tage</option>
+          <option value="15" selected>15 Tage</option>
+          <option value="20">20 Tage</option>
+        </select>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-start-free">Simulation starten →</button>
+        <button class="btn btn-secondary" id="btn-back-from-config">← Zurück</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     VIEW 7: RESULTS (Free Experimentation)
+══════════════════════════════════════════════════════ -->
+<div id="view-results" class="view">
+  <div class="app-header">
+    <h1>Kanban-Simulator</h1>
+    <div class="phase-badge">Ergebnisse</div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <h2>Ergebnisse – Durchlauf <span id="free-run-nr">1</span></h2>
+      <div id="free-config-summary" style="margin-bottom:16px;font-size:.85rem;color:#64748b"></div>
+
+      <div class="metrics-grid" id="free-metrics"></div>
+
+      <div class="cfd-wrap">
+        <h3>Kumulativer Fluss</h3>
+        <canvas id="cfd-free" height="200"></canvas>
+        <div class="cfd-legend" id="cfd-legend-free"></div>
+      </div>
+
+      <div id="free-comparison-section"></div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-again-free">Erneut experimentieren →</button>
+        <button class="btn btn-secondary" id="btn-go-closing-from-results">Abschließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     VIEW 8: CLOSING
+══════════════════════════════════════════════════════ -->
+<div id="view-closing" class="view">
+  <div class="app-header">
+    <h1>Kanban-Simulator</h1>
+    <div class="phase-badge">Abschlussauswertung</div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <h2>Abschlussauswertung</h2>
+      <div id="closing-summary"></div>
+
+      <hr class="divider">
+      <h3>Transfer: Was bedeutet das für die Praxis?</h3>
+      <div class="transfer-grid">
+        <div class="transfer-item">
+          <h4>Visualisierung (P1)</h4>
+          <p>Das Board macht unsichtbare Arbeit sichtbar. Stau, Engpässe und Ungleichgewichte werden sofort erkennbar – ohne Statusmeetings.</p>
+        </div>
+        <div class="transfer-item">
+          <h4>WIP begrenzen (P2)</h4>
+          <p>Weniger parallele Arbeit bedeutet kürzere Durchlaufzeiten. „Stop starting, start finishing" ist kein Slogan, sondern Systemgesetz.</p>
+        </div>
+        <div class="transfer-item">
+          <h4>Fluss managen (P3)</h4>
+          <p>Der Engpass bestimmt den Systemdurchsatz. Ihn zu entlasten bringt mehr als an anderer Stelle zu optimieren.</p>
+        </div>
+        <div class="transfer-item">
+          <h4>Feedback-Schleifen (P5 + P6)</h4>
+          <p>Die Reflexionsphasen im Simulator spiegeln Stand-ups, Reviews und Retrospektiven wider – Daten als Basis für Verbesserung.</p>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-secondary" id="btn-restart">↺ Neu starten</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src = "script.js"></script>
+</body>
+</html>
